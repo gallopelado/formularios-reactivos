@@ -5,7 +5,11 @@
   "projects": {
     "reactive-forms-app": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "type": "component"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -92,5 +96,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "d3640e51-3ae1-4fdf-83e8-241801badc73"
   }
 }
