@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col">
 
-        <form autocomplete="off" [formGroup]="myForm">
+        <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSave()">
 
             <!-- Campo de producto -->
             <div class="mb-3 row">
@@ -17,10 +17,10 @@
                            formControlName="name"
                     />
 
-                    @if ( isValidField('name') ) {
+                    @if ( formUtils.isValidField(myForm, 'name') ) {
                       <span class="form-text text-danger">
                           <!-- Debe de ser de 3 letras -->
-                          {{ getFieldError('name') }}
+                          {{ formUtils.getFieldError(myForm, 'name') }}
                       </span>
                     }
                 </div>
@@ -35,9 +35,12 @@
                            placeholder="Precio del producto"
                            formControlName="price"
                     />
-                    <span class="form-text text-danger">
-                        El precio debe de ser 0 o mayor
-                    </span>
+                    @if ( formUtils.isValidField(myForm, 'price') ) {
+                      <span class="form-text text-danger">
+                          <!-- Debe de ser de 3 letras -->
+                          {{ formUtils.getFieldError(myForm, 'price') }}
+                      </span>
+                    }
                 </div>
             </div>
 
@@ -51,9 +54,12 @@
                            formControlName="inStorage"
                     />
 
-                    <span class="form-text text-danger">
-                         Las existencias deben de ser 0 o mayor
-                    </span>
+                    @if ( formUtils.isValidField(myForm, 'inStorage') ) {
+                      <span class="form-text text-danger">
+                          <!-- Debe de ser de 3 letras -->
+                          {{ formUtils.getFieldError(myForm, 'inStorage') }}
+                      </span>
+                    }
                 </div>
             </div>
 
