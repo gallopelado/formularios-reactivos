@@ -1,7 +1,7 @@
 <h2>Reactivos: <small> Dinámicos </small></h2>
 <hr>
 
-<form autocomplete="off" [formGroup]="myForm">
+<form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSubmit()">
 
     <!-- Nombre -->
     <div class="mb-3 row">
@@ -25,12 +25,17 @@
         <div class="col-sm-9">
 
             <div class="input-group">
-                <input class="form-control"
-                       placeholder="Agregar favorito">
+                <input
+                  class="form-control"
+                  placeholder="Agregar favorito"
+                  [formControl]="newFavorite"
+                  (keydown.enter)="onAddToFavorites()"
+                />
 
 
                 <button class="btn btn-outline-primary"
-                        type="button">
+                        type="button"
+                        (click)="onAddToFavorites()">
                     Agregar favorito
                 </button>
             </div>
@@ -50,7 +55,8 @@
                     <input class="form-control" [formControlName]="i">
 
                     <button class="btn btn-outline-danger"
-                            type="button">
+                            type="button"
+                            (click)="onDeleteToFavorites(i)">
                       Eliminar
                   </button>
                 </div>
@@ -63,7 +69,16 @@
 
             </div>
           }
-
+          @if ( myForm.invalid && myForm.touched ) {
+            <span class="form-text text-danger">
+              El formulario no está completo
+            </span>
+          }
+          @if ( formUtils.isValidField(myForm, 'favoriteGames') ) {
+            <span class="form-text text-danger">
+              Debe haber al menos dos juegos
+            </span>
+          }
         </div>
     </div>
 
@@ -94,5 +109,5 @@
 <br>
 
 <span>Agregar Juego</span>
-<!-- <pre>{{ myForm.value | json }}</pre> -->
-<!-- <pre>{{ 'object' | json }}</pre> -->
+<pre>{{ myForm.controls['favoriteGames'].value | json }}</pre>
+<pre>{{ myForm.controls['favoriteGames'].errors| json }}</pre>
