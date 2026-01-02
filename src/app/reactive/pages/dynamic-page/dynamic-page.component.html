@@ -30,6 +30,7 @@
                   placeholder="Agregar favorito"
                   [formControl]="newFavorite"
                   (keydown.enter)="onAddToFavorites()"
+                  (keydown.enter)="$event.preventDefault()"
                 />
 
 
