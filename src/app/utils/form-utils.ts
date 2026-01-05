@@ -24,6 +24,8 @@ export class FormUtils {
           return `Valor mínimo de ${ errors['min'].min } caracteres`;
         case 'emailTaken':
           return `El correo electrónico ya está siendo usado por otro usuario`;
+        case 'noStrider':
+          return 'El usuario no puede ser strider';
         case 'pattern':
           if ( errors['pattern'].requiredPattern == FormUtils.emailPattern ) {
             return 'El valor ingresado no luce como un email';
@@ -91,6 +93,21 @@ export class FormUtils {
     }
 
     return null;
+  }
+
+  // static notStrider(field: string): ValidationErrors | null {
+
+  //   return ( formGroup: AbstractControl ) => {
+  //     const userNameValue = formGroup.get(field)?.value.toLocaleLowerCase();
+  //     return userNameValue.includes("strider") ? { noStrider: true } : null;
+  //   }
+  //   // { noStrider: true ?? null }
+  // }
+
+  // otra forma
+  static notStrider(control: AbstractControl): ValidationErrors | null {
+    const userNameValue = control.value;
+    return userNameValue === 'strider' ? { noStrider: true } : null;
   }
 
 }
