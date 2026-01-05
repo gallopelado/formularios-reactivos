@@ -12,7 +12,7 @@ export class SwitchesPageComponent {
   private fb = inject(FormBuilder);
   formUtils = FormUtils;
 
-  myForm: FormGroup = this. fb.group({
+  myForm: FormGroup = this.fb.group({
     gender: ['M', [Validators.required]],
     wantNotificacions: [true],
     termsAndConditions: [false, [Validators.requiredTrue]],
