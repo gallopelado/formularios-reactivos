@@ -1,4 +1,12 @@
 import { AbstractControl, FormArray, FormGroup, ValidationErrors } from '@angular/forms';
+
+async function sleep() {
+  return new Promise( resolve => {
+    setTimeout(() => {
+      resolve(true);
+    }, 2500);
+  });
+}
 export class FormUtils {
 
   static namePattern = '([a-zA-Z]+) ([a-zA-Z]+)';
@@ -14,6 +22,17 @@ export class FormUtils {
           return `Mínimo de ${ errors['minlength'].requiredLength } caracteres`;
         case 'min':
           return `Valor mínimo de ${ errors['min'].min } caracteres`;
+        case 'emailTaken':
+          return `El correo electrónico ya está siendo usado por otro usuario`;
+        case 'pattern':
+          if ( errors['pattern'].requiredPattern == FormUtils.emailPattern ) {
+            return 'El valor ingresado no luce como un email';
+          }
+          return 'Error de patrón contra expresión regular';
+
+        default:
+          return `Error de validación no controlado ${key}`;
+
       }
     }
     return null;
@@ -56,6 +75,22 @@ export class FormUtils {
 
       return field1Value === field2Value ? null : { passwordNotEqual: true };
     };
+  }
+
+  static async checkingServerResponse(control: AbstractControl): Promise<ValidationErrors | null> {
+
+    console.log('Validando contra servidor');
+    await sleep(); // 2.5 segundos
+
+    const formValue = control.value;
+
+    if ( formValue === "hola@mundo.com" ) {
+      return {
+        emailTaken: true
+      };
+    }
+
+    return null;
   }
 
 }
