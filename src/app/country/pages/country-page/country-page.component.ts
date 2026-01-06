@@ -3,7 +3,7 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CountryService } from '../../services/country.service';
 import { Country } from '../../interfaces/country.interface';
-import { switchMap, tap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-country-page',
@@ -36,8 +36,10 @@ export class CountryPageComponent {
     //   console.log({value});
     // });
     const regionSubscription = this.onRegionChanged();
+    const countrySubscription = this.onCountryChanged();
     onCleanUp(() => {
       regionSubscription.unsubscribe();
+      countrySubscription.unsubscribe();
     });
   });
 
@@ -45,8 +47,8 @@ export class CountryPageComponent {
     return this.myForm.get('region')!.valueChanges
       .pipe(
         // cambiamos los otros controles desde el tap
-        tap( () => this.myForm.get('country')!.setValue('')),
-        tap( () => this.myForm.get('border')!.setValue('')),
+        tap( () => this.myForm.get('country')!.setValue('') ),
+        tap( () => this.myForm.get('border')!.setValue('') ),
         tap( () => {
           this.borders.set([]);
           this.countriesByRegion.set([]);
@@ -57,6 +59,18 @@ export class CountryPageComponent {
       .subscribe( countries => {
         this.countriesByRegion.set(countries);
       })
+  }
+
+  onCountryChanged() {
+     return this.myForm.get('country')!.valueChanges
+      .pipe(
+        tap( () => this.myForm.get('border')!.setValue('') ),
+        filter((value) => value!.length > 0),
+        //tap( () => this.borders.set([]) ),
+        switchMap( countryCode => this.countryService.getCountryByAlphaCode(countryCode ?? '') ),
+        switchMap( ({ borders }) => this.countryService.getCountryNamesByCodeArray(borders) )
+      )
+      .subscribe((countries) => this.borders.set(countries))
   }
 
 }
